@@ -5,7 +5,7 @@ const App = () => {
   const sendTestEmail = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:1337/api/send-test-email"
+        "http://localhost:1337/api/email/send-test"
       );
       alert(response.data);
     } catch (error) {
