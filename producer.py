@@ -1,26 +1,31 @@
 from kafka import KafkaProducer
 import json
 
-# Initialize Kafka producer
-producer = KafkaProducer(
-    bootstrap_servers=['localhost:9092'],  # Update with your Kafka broker address
-    value_serializer=lambda v: json.dumps(v).encode('utf-8')  # Serialize data to JSON format
-)
+class EmailProducer:
+    def __init__(self, bootstrap_servers=['localhost:9092']):
+        self.producer = KafkaProducer(
+            bootstrap_servers=bootstrap_servers,
+            value_serializer=lambda v: json.dumps(v).encode('utf-8')
+        )
 
-# Message payload (This should match your consumer's expected structure)
-email_data = {
-    "subject": "Custom Subject",
-    "recipientEmail": "pacmanatwork26@gmail.com",
-    "organizationName": "ACME Corp",
-    "teamName": "QA Team",
-    "recipientName": "John Doe",
-    "htmlContent": "Optional custom HTML content"
-}
+    def send_email(self, email_data):
+        future = self.producer.send('email-topic', value=email_data)
+        try:
+            future.get(timeout=10)  # Wait for the send to complete
+            return True
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return False
 
-# Send the message to the topic
-producer.send('email-topic', value=email_data)
-print(f"Sent email data to Kafka topic 'email-topic': {email_data}")
+    def close(self):
+        if self.producer is not None:
+            self.producer.close()
+            self.producer = None
 
-# Ensure all messages are sent before closing the producer
-producer.flush()
-producer.close()
+producer = None
+
+def get_producer():
+    global producer
+    if producer is None:
+        producer = EmailProducer()
+    return producer 

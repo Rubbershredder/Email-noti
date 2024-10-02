@@ -15,7 +15,7 @@ consumer = KafkaConsumer(
 print("Connected to Kafka topic 'email-topic' at localhost:9092")
 
 # URL for Strapi API endpoint
-strapi_url = "http://localhost:1337/api/email/sendTestEmail"
+strapi_url = "http://localhost:1337/api/email/send-test"
 
 # Listen for messages on the Kafka topic
 for message in consumer:
