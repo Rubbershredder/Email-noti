@@ -63,7 +63,7 @@ module.exports = createCoreController("api::email.email", ({ strapi }) => ({
       // Set up email data
       const emailData = {
         sender: { email: "amanmuleva@gmail.com" }, // Your email
-        to: [{ email: recipientEmail || "quantumbeast07@gmail.com" }], // Recipient email
+        to: [{ email: recipientEmail }], // Recipient email
         subject:
           subject ||
           `API Testing Report - ${organizationName || "[Organization Name]"}`,
